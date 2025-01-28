@@ -6,6 +6,7 @@ import 'data/test_data.dart';
 import 'services/ad_service.dart';
 import 'services/preferences_service.dart';
 import 'screens/welcome_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,23 +22,24 @@ class MyApp extends StatelessWidget {
   
   const MyApp({super.key, required this.isFirstTime});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false,
-      title: 'Ehliyet Sınavı',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFF8B5CF6),
-        useMaterial3: true,
-      ),
-      home: isFirstTime ? const WelcomeScreen() : const TestListScreen(),
-      routes: {
-        '/tests': (context) => const TestListScreen(),
-      },
-    );
-  }
+ @override
+Widget build(BuildContext context) {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'Ehliyet Sınavı',
+    theme: ThemeData(
+      primarySwatch: Colors.blue,
+      scaffoldBackgroundColor: const Color(0xFF8B5CF6),
+      useMaterial3: true,
+    ),
+    home: const SplashScreen(),
+    routes: {
+      '/home': (context) => isFirstTime ? const WelcomeScreen() :  const TestListScreen(),
+      '/tests': (context) =>  const TestListScreen(),
+    },
+  );
 }
-
+}
 class TestListScreen extends StatefulWidget {
   const TestListScreen({super.key});
 
@@ -52,15 +54,57 @@ class _TestListScreenState extends State<TestListScreen> {
   void initState() {
     super.initState();
     _adService.loadInterstitialAd();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _adService.showInterstitialAd();
-    });
   }
 
   @override
   void dispose() {
     _adService.dispose();
     super.dispose();
+  }
+
+  void _handleLevelUnlock(int testIndex) {
+    final test = allTests[testIndex];
+    if (testIndex > 0) {
+      final previousTest = allTests[testIndex - 1];
+      final bool canUnlockWithPreviousTest = previousTest.isCompleted && (previousTest.score ?? 0) >= 35;
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Seviye Kilitli'),
+          content: Text(
+            canUnlockWithPreviousTest 
+              ? 'Tebrikler! Önceki testi başarıyla tamamladınız. Bu seviye açıldı.'
+              : 'Bu seviyeyi açmak için önceki testten en az 35 doğru yapmanız veya 2 reklam izlemeniz gerekiyor.'
+          ),
+          actions: [
+            if (!canUnlockWithPreviousTest)
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _adService.showAdForUnlock('test_$testIndex', () {
+                    setState(() {
+                      test.isLocked = false;
+                    });
+                  });
+                },
+                child: Text('Reklam İzle (${_adService.remainingAdsToUnlock} kaldı)'),
+              ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                if (canUnlockWithPreviousTest) {
+                  setState(() {
+                    test.isLocked = false;
+                  });
+                }
+              },
+              child: Text(canUnlockWithPreviousTest ? 'Tamam' : 'İptal'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -73,19 +117,7 @@ class _TestListScreenState extends State<TestListScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
+                  
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
@@ -111,6 +143,7 @@ class _TestListScreenState extends State<TestListScreen> {
                     icon: const Icon(Icons.info_outline, color: Colors.white),
                     onPressed: () async {
                       await PreferencesService.resetFirstTimeOpen();
+                      if (!mounted) return;
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -189,45 +222,21 @@ class _TestListScreenState extends State<TestListScreen> {
                           ),
                         ),
                         trailing: test.isLocked ? 
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Text(
-                              'Kilidi Aç',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ) :
-                          const Icon(Icons.chevron_right, color: Colors.grey),
-                        onTap: () {
-                          if (test.isLocked) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Kilitli Test'),
-                                content: const Text('Bu testi açmak için önceki testi başarıyla tamamlamanız gerekmektedir.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('Tamam'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TestScreen(test: test),
-                              ),
-                            );
-                          }
-                        },
+                          TextButton(
+                            onPressed: () => _handleLevelUnlock(index),
+                            child: const Text('Kilidi Aç'),
+                          )
+                          : const Icon(Icons.chevron_right),
+                        onTap: test.isLocked 
+                          ? () => _handleLevelUnlock(index)
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TestScreen(test: test),
+                                ),
+                              );
+                            },
                       ),
                     );
                   },
