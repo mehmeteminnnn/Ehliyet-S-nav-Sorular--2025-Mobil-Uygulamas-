@@ -11,35 +11,37 @@ import 'screens/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  
+
   final isFirstTime = await PreferencesService.isFirstTimeOpen();
-  
+
   runApp(MyApp(isFirstTime: isFirstTime));
 }
 
 class MyApp extends StatelessWidget {
   final bool isFirstTime;
-  
+
   const MyApp({super.key, required this.isFirstTime});
 
- @override
-Widget build(BuildContext context) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Ehliyet Sınavı',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-      scaffoldBackgroundColor: const Color(0xFF8B5CF6),
-      useMaterial3: true,
-    ),
-    home: const SplashScreen(),
-    routes: {
-      '/home': (context) => isFirstTime ? const WelcomeScreen() :  const TestListScreen(),
-      '/tests': (context) =>  const TestListScreen(),
-    },
-  );
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Ehliyet Sınavı',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFF8B5CF6),
+        useMaterial3: true,
+      ),
+      home: const SplashScreen(),
+      routes: {
+        '/home': (context) =>
+            isFirstTime ? const WelcomeScreen() : const TestListScreen(),
+        '/tests': (context) => const TestListScreen(),
+      },
+    );
+  }
 }
-}
+
 class TestListScreen extends StatefulWidget {
   const TestListScreen({super.key});
 
@@ -54,6 +56,7 @@ class _TestListScreenState extends State<TestListScreen> {
   void initState() {
     super.initState();
     _adService.loadInterstitialAd();
+    _adService.loadRewardedAd();
   }
 
   @override
@@ -66,29 +69,31 @@ class _TestListScreenState extends State<TestListScreen> {
     final test = allTests[testIndex];
     if (testIndex > 0) {
       final previousTest = allTests[testIndex - 1];
-      final bool canUnlockWithPreviousTest = previousTest.isCompleted && (previousTest.score ?? 0) >= 35;
-      
+      final bool canUnlockWithPreviousTest =
+          previousTest.isCompleted && (previousTest.score ?? 0) >= 35;
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Seviye Kilitli'),
-          content: Text(
-            canUnlockWithPreviousTest 
+          content: Text(canUnlockWithPreviousTest
               ? 'Tebrikler! Önceki testi başarıyla tamamladınız. Bu seviye açıldı.'
-              : 'Bu seviyeyi açmak için önceki testten en az 35 doğru yapmanız veya 2 reklam izlemeniz gerekiyor.'
-          ),
+              : 'Bu seviyeyi açmak için önceki testten en az 35 doğru yapmanız veya ${_adService.remainingAdsToUnlock} ödüllü reklam izlemeniz gerekiyor.'),
           actions: [
             if (!canUnlockWithPreviousTest)
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  _adService.showAdForUnlock('test_$testIndex', () {
+                  _adService.showRewardedAd(() {
                     setState(() {
-                      test.isLocked = false;
+                      if (_adService.remainingAdsToUnlock <= 0) {
+                        test.isLocked = false;
+                      }
                     });
                   });
                 },
-                child: Text('Reklam İzle (${_adService.remainingAdsToUnlock} kaldı)'),
+                child: Text(
+                    'Reklam İzle (${_adService.remainingAdsToUnlock} kaldı)'),
               ),
             TextButton(
               onPressed: () {
@@ -117,7 +122,6 @@ class _TestListScreenState extends State<TestListScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
@@ -146,7 +150,8 @@ class _TestListScreenState extends State<TestListScreen> {
                       if (!mounted) return;
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const WelcomeScreen()),
                       );
                     },
                   ),
@@ -167,7 +172,7 @@ class _TestListScreenState extends State<TestListScreen> {
                   itemCount: allTests.length,
                   itemBuilder: (context, index) {
                     final test = allTests[index];
-                    
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
@@ -191,11 +196,14 @@ class _TestListScreenState extends State<TestListScreen> {
                           height: 32,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: test.isLocked ? Colors.grey[200] : const Color(0xFFF3F4F6),
+                            color: test.isLocked
+                                ? Colors.grey[200]
+                                : const Color(0xFFF3F4F6),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: test.isLocked 
-                              ? const Icon(Icons.lock, size: 18, color: Colors.grey)
+                          child: test.isLocked
+                              ? const Icon(Icons.lock,
+                                  size: 18, color: Colors.grey)
                               : Text(
                                   '${index + 1}',
                                   style: const TextStyle(
@@ -212,31 +220,38 @@ class _TestListScreenState extends State<TestListScreen> {
                           ),
                         ),
                         subtitle: Text(
-                          test.isLocked ? 'Kilitli' :
-                          test.isCompleted ? 'Tamamlandı' :
-                          test.score != null ? 'Devam Ediyor' : 'Başlanmadı',
+                          test.isLocked
+                              ? 'Kilitli'
+                              : test.isCompleted
+                                  ? 'Tamamlandı'
+                                  : test.score != null
+                                      ? 'Devam Ediyor'
+                                      : 'Başlanmadı',
                           style: TextStyle(
-                            color: test.isLocked ? Colors.red :
-                                   test.isCompleted ? Colors.green :
-                                   Colors.grey,
+                            color: test.isLocked
+                                ? Colors.red
+                                : test.isCompleted
+                                    ? Colors.green
+                                    : Colors.grey,
                           ),
                         ),
-                        trailing: test.isLocked ? 
-                          TextButton(
-                            onPressed: () => _handleLevelUnlock(index),
-                            child: const Text('Kilidi Aç'),
-                          )
-                          : const Icon(Icons.chevron_right),
-                        onTap: test.isLocked 
-                          ? () => _handleLevelUnlock(index)
-                          : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TestScreen(test: test),
-                                ),
-                              );
-                            },
+                        trailing: test.isLocked
+                            ? TextButton(
+                                onPressed: () => _handleLevelUnlock(index),
+                                child: const Text('Kilidi Aç'),
+                              )
+                            : const Icon(Icons.chevron_right),
+                        onTap: test.isLocked
+                            ? () => _handleLevelUnlock(index)
+                            : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        TestScreen(test: test),
+                                  ),
+                                );
+                              },
                       ),
                     );
                   },
@@ -291,65 +306,58 @@ class _TestScreenState extends State<TestScreen> {
       appBar: AppBar(
         title: Text('Test ${widget.test.testNumber}'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            LinearProgressIndicator(
-              value: (_currentQuestionIndex + 1) / widget.test.questions.length,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Soru ${_currentQuestionIndex + 1}/${widget.test.questions.length}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
-            if (question.imageUrl != null)
-              Container(
-                height: 200,
-                child: Image.network(
-                  question.imageUrl!,
-                  fit: BoxFit.contain,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Center(
-                      child: Text(
-                        'Resim yüklenemedi',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    );
-                  },
-                ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              LinearProgressIndicator(
+                value:
+                    (_currentQuestionIndex + 1) / widget.test.questions.length,
               ),
-            const SizedBox(height: 16),
-            Text(
-              question.questionText,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 24),
-            ...List.generate(
-              question.options.length,
-              (index) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: ElevatedButton(
-                  onPressed: () => _submitAnswer(
-                    String.fromCharCode(65 + index), // Convert 0-3 to A-D
+              const SizedBox(height: 16),
+              Text(
+                'Soru ${_currentQuestionIndex + 1}/${widget.test.questions.length}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              if (question.imageUrl != null)
+                SizedBox(
+                  height: 200,
+                  child: Image.asset(
+                    question.imageUrl!,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(
+                        child: Text(
+                          'Resim yüklenemedi',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      );
+                    },
                   ),
-                  child: Text(question.options[index]),
+                ),
+              const SizedBox(height: 16),
+              Text(
+                question.questionText,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 24),
+              ...List.generate(
+                question.options.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () => _submitAnswer(
+                      String.fromCharCode(65 + index),
+                    ),
+                    child: Text(question.options[index]),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -452,8 +460,10 @@ class _TestScreenState extends State<TestScreen> {
                                         width: 80,
                                         height: 80,
                                         child: CircularProgressIndicator(
-                                          value: correctAnswers / totalQuestions,
-                                          backgroundColor: Colors.red.withOpacity(0.2),
+                                          value:
+                                              correctAnswers / totalQuestions,
+                                          backgroundColor:
+                                              Colors.red.withOpacity(0.2),
                                           color: Colors.blue,
                                           strokeWidth: 8,
                                         ),
@@ -532,7 +542,8 @@ class _TestScreenState extends State<TestScreen> {
                               ),
                               child: const Row(
                                 children: [
-                                  Icon(Icons.info_outline, color: Colors.red, size: 20),
+                                  Icon(Icons.info_outline,
+                                      color: Colors.red, size: 20),
                                   SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
@@ -569,95 +580,202 @@ class _TestScreenState extends State<TestScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: MediaQuery.of(context).size.width - 64,
-                              ),
-                              child: DataTable(
-                                columnSpacing: 16,
-                                horizontalMargin: 8,
-                                dataRowHeight: 48,
-                                headingRowHeight: 40,
-                                columns: const [
-                                  DataColumn(
-                                    label: Text(
-                                      'No',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.test.questions.length,
+                            itemBuilder: (context, index) {
+                              final question = widget.test.questions[index];
+                              final userAnswer = _userAnswers[index] ?? '-';
+                              final isCorrect =
+                                  userAnswer == question.correctAnswer;
+
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: isCorrect
+                                      ? Colors.green.withOpacity(0.1)
+                                      : Colors.red.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: ExpansionTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor:
+                                        isCorrect ? Colors.green : Colors.red,
+                                    child: Text(
+                                      '${index + 1}',
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
                                   ),
-                                  DataColumn(
-                                    label: Text(
-                                      'D.C',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'S.C',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Icon(
-                                      Icons.check_circle_outline,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ],
-                                rows: List.generate(
-                                  widget.test.questions.length,
-                                  (index) {
-                                    final question = widget.test.questions[index];
-                                    final userAnswer = _userAnswers[index] ?? '-';
-                                    final isCorrect = userAnswer == question.correctAnswer;
-                                    
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(Text('${index + 1}')),
-                                        DataCell(Text(question.correctAnswer)),
-                                        DataCell(Text(userAnswer)),
-                                        DataCell(
-                                          Icon(
-                                            isCorrect ? Icons.check_circle : Icons.cancel,
-                                            color: isCorrect ? Colors.green : Colors.red,
-                                            size: 20,
+                                  title: Wrap(
+                                    spacing: 8,
+                                    children: [
+                                      Text(
+                                        'Cevabınız: $userAnswer',
+                                        style: TextStyle(
+                                          color: isCorrect
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      if (!isCorrect)
+                                        Text(
+                                          '(Doğru: ${question.correctAnswer})',
+                                          style: const TextStyle(
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ],
-                                    );
-                                  },
+                                    ],
+                                  ),
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (question.imageUrl != null) ...[
+                                            Image.asset(
+                                              question.imageUrl!,
+                                              height: 120,
+                                              fit: BoxFit.contain,
+                                            ),
+                                            const SizedBox(height: 8),
+                                          ],
+                                          Text(
+                                            question.questionText,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          ...question.options
+                                              .asMap()
+                                              .entries
+                                              .map((entry) {
+                                            final optionIndex = entry.key;
+                                            final option = entry.value;
+                                            final optionLetter =
+                                                String.fromCharCode(
+                                                    65 + optionIndex);
+                                            final isCorrectOption =
+                                                optionLetter ==
+                                                    question.correctAnswer;
+                                            final isSelectedOption =
+                                                optionLetter == userAnswer;
+
+                                            return Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 4),
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: isCorrectOption
+                                                    ? Colors.green
+                                                        .withOpacity(0.1)
+                                                    : isSelectedOption &&
+                                                            !isCorrectOption
+                                                        ? Colors.red
+                                                            .withOpacity(0.1)
+                                                        : Colors.grey
+                                                            .withOpacity(0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 30,
+                                                    child: Text(
+                                                      '$optionLetter) ',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: isCorrectOption
+                                                            ? Colors.green
+                                                            : isSelectedOption &&
+                                                                    !isCorrectOption
+                                                                ? Colors.red
+                                                                : Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      option,
+                                                      style: TextStyle(
+                                                        color: isCorrectOption
+                                                            ? Colors.green
+                                                            : isSelectedOption &&
+                                                                    !isCorrectOption
+                                                                ? Colors.red
+                                                                : Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (isCorrectOption)
+                                                    const Icon(
+                                                        Icons.check_circle,
+                                                        color: Colors.green,
+                                                        size: 20)
+                                                  else if (isSelectedOption &&
+                                                      !isCorrectOption)
+                                                    const Icon(Icons.cancel,
+                                                        color: Colors.red,
+                                                        size: 20),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (hasPassedTest) {
-                          // Unlock next test if passed
-                          if (widget.test.testNumber < allTests.length) {
-                            allTests[widget.test.testNumber].isLocked = false;
-                          }
-                          widget.test.isCompleted = true;
-                          Navigator.pop(context);
-                        } else {
-                          // Reset test to try again
-                          setState(() {
-                            _currentQuestionIndex = 0;
-                            _userAnswers.clear();
-                            _showResults = false;
-                          });
-                        }
-                      },
-                      child: Text(
-                        hasPassedTest ? 'Testlere Dön' : 'Testi Tekrar Çöz',
-                        style: const TextStyle(fontSize: 18),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _currentQuestionIndex = 0;
+                              _userAnswers.clear();
+                              _showResults = false;
+                            });
+                          },
+                          child: const Text('Testi Tekrar Çöz'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (hasPassedTest) {
+                              if (widget.test.testNumber < allTests.length) {
+                                allTests[widget.test.testNumber].isLocked =
+                                    false;
+                              }
+                              widget.test.isCompleted = true;
+                            }
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/home',
+                              (route) => false,
+                            );
+                          },
+                          child: const Text('Ana Menüye Dön'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -670,19 +788,14 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   void _submitAnswer(String answer) {
-    // Clear image cache every 5 questions to prevent memory issues
-    if (_currentQuestionIndex % 5 == 0) {
-      imageCache.clear();
-      imageCache.clearLiveImages();
-    }
-    
     setState(() {
       _userAnswers[_currentQuestionIndex] = answer;
       if (_currentQuestionIndex < widget.test.questions.length - 1) {
         _currentQuestionIndex++;
-        
-        // Show ad every 5 questions (but not on the last question)
-        if (_currentQuestionIndex % 5 == 0 && _currentQuestionIndex < widget.test.questions.length - 1) {
+
+        // Her 10 soruda bir reklam göster
+        if (_currentQuestionIndex % 10 == 0 &&
+            _currentQuestionIndex < widget.test.questions.length - 1) {
           _adService.showInterstitialAd();
         }
       } else {

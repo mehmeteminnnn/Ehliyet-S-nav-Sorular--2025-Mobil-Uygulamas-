@@ -1,17 +1,22 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'preferences_service.dart';
+import 'package:flutter/foundation.dart';
 
 class AdService {
   static final AdService _instance = AdService._internal();
   factory AdService() => _instance;
   AdService._internal();
 
-  static String get interstitialAdUnitId => 'ca-app-pub-2913289160482051/6003166560';
+  static String get interstitialAdUnitId =>
+      'ca-app-pub-2913289160482051/6003166560';
 
   InterstitialAd? _interstitialAd;
+  RewardedAd? _rewardedAd;
   bool _isInterstitialAdReady = false;
-  int _watchedAdsCount = 0;
+  int _remainingAdsToUnlock = 2;
   Function? _onAdDismissed;
+
+  int get remainingAdsToUnlock => _remainingAdsToUnlock;
 
   void loadInterstitialAd() {
     InterstitialAd.load(
@@ -33,10 +38,9 @@ class AdService {
   void _setupAdCallbacks(InterstitialAd ad) {
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
-        _watchedAdsCount++;
-        if (_watchedAdsCount >= 2) {
-          _onAdDismissed?.call();
-          _watchedAdsCount = 0;
+        _remainingAdsToUnlock--;
+        if (_remainingAdsToUnlock <= 0) {
+          _remainingAdsToUnlock = 2; // Reset for next level
         }
         _isInterstitialAdReady = false;
         loadInterstitialAd();
@@ -70,13 +74,61 @@ class AdService {
     _interstitialAd!.show();
   }
 
-  bool get canUnlockWithAds => _watchedAdsCount >= 2;
-  
-  int get remainingAdsToUnlock => 2 - _watchedAdsCount;
+  bool get canUnlockWithAds => _remainingAdsToUnlock > 0;
 
+  void loadRewardedAd() {
+    RewardedAd.load(
+      adUnitId: 'ca-app-pub-2913289160482051/5837415534',
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          _rewardedAd = ad;
+          _setRewardedAdCallbacks();
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('Ödüllü reklam yüklenemedi: $error');
+        },
+      ),
+    );
+  }
+
+  void _setRewardedAdCallbacks() {
+    if (_rewardedAd == null) return;
+
+    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        ad.dispose();
+        loadRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        ad.dispose();
+        loadRewardedAd();
+      },
+    );
+  }
+
+  void showRewardedAd(Function onRewarded) {
+    if (_rewardedAd == null) {
+      debugPrint('Ödüllü reklam henüz hazır değil.');
+      return;
+    }
+
+    _rewardedAd!.show(
+      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        _remainingAdsToUnlock--;
+        onRewarded();
+        if (_remainingAdsToUnlock <= 0) {
+          _remainingAdsToUnlock = 2; // Reset for next level
+        }
+      },
+    );
+  }
+
+  @override
   void dispose() {
     _interstitialAd?.dispose();
-    _watchedAdsCount = 0;
+    _rewardedAd?.dispose();
+    _remainingAdsToUnlock = 2;
     _onAdDismissed = null;
   }
 }

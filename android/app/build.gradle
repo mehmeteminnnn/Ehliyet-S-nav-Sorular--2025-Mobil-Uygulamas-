@@ -4,6 +4,11 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -29,9 +34,10 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.meminapp.aklimda" // Paket adınızı doğru şekilde ekledim
+    namespace "com.meminapp.ehliyet2025" // Paket adınızı doğru şekilde ekledim
     compileSdk = flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+    
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -47,18 +53,26 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.meminapp.aklimda" // Uygulamanızın ID'si
-        minSdkVersion  flutter.minSdkVersion// Gradle 8.3 ile uyumlu minimum SDK sürümü
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-        multiDexEnabled true
+        applicationId "com.meminapp.ehliyet2025" // Uygulamanızın ID'si
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = 1
+        versionName = 1.0
     }
 
+    signingConfigs {
+        release {
+            keyAlias = keystoreProperties['keyAlias']
+            keyPassword = keystoreProperties['keyPassword']
+            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword = keystoreProperties['storePassword']
+        }
+    }
     buildTypes {
         release {
-            // İmza yapılandırması debug olarak kalıyor; isteğe göre değiştirilebilir.
-            signingConfig signingConfigs.debug
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.release
         }
     }
 }
@@ -66,8 +80,8 @@ android {
 flutter {
     source "../.."
 }
-
-/*dependencies {
+/*
+dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version" // Gradle 8.3 için uygun Kotlin
     implementation 'androidx.multidex:multidex:2.0.1' // Multidex desteği güncellendi
 }*/
