@@ -143,7 +143,8 @@ final List<Question> test1Questions = [
   ),
   // 16. Soru (Görsel soru)
   Question(
-    questionText: "Şekildeki trafik işareti neyi ifade eder?",
+    questionText:
+        "Yukarıdakilerden hangisi tehlikeli viraj yön levhası anlamındadır?",
     options: ["A", "B", "C", "D"],
     correctAnswer: "A",
     imageUrl: "assets/images/deneme1-16.png",
@@ -177,7 +178,8 @@ final List<Question> test1Questions = [
 
   // 19. Soru
   Question(
-    questionText: "",
+    questionText:
+        "Yukarıdaki trafik işaretlerinden hangisi kamyonlar için öndeki aracı geçme yasağını belirtir?",
     options: ["A", "B", "C", "D"],
     correctAnswer: "A",
     imageUrl: "assets/images/deneme1-19.png",
@@ -185,7 +187,8 @@ final List<Question> test1Questions = [
 
   // 20. Soru
   Question(
-    questionText: "",
+    questionText:
+        "Yukarıdaki trafik tanzim işaretlerinden hangisi bütün yasaklama ve kısıtların sona erdiğini bildirir?",
     options: ["A", "B", "C", "D"],
     correctAnswer: "A",
     imageUrl: "assets/images/deneme1-20.png",
@@ -254,7 +257,8 @@ final List<Question> test1Questions = [
 
   // 27. Soru
   Question(
-    questionText: "",
+    questionText:
+        "Aksine bir işaret yoksa şekildeki aracın yerleşim yerindeki azami hızı kaç km/saat olmalıdır?",
     options: ["30", "50", "70", "80"],
     correctAnswer: "B",
     imageUrl: null, // Görsel içermiyor
@@ -419,7 +423,126 @@ final List<Question> test1Questions = [
       "Radyatörde antifrizin olmaması"
     ],
     correctAnswer: "A",
-    imageUrl: "assets/images/deneme1-40.png",
+    imageUrl: null,
+  ),
+
+  // 41. Soru
+  Question(
+    questionText:
+        "Çalışan parçalarda sürtünmeye bağlı olarak meydana gelen aşınmayı azaltan madde hangisidir?",
+    options: ["Antifriz", "Motor yağı", "Hidrolik yağı", "Akü elektroliti"],
+    correctAnswer: "B",
+    imageUrl: null,
+  ),
+
+// 42. Soru
+  Question(
+    questionText:
+        "Süspansiyon sisteminde bulunan ve yay salınım süresini kısaltan, şekilde soru işareti (?) ile gösterilmiş parça aşağıdakilerden hangisidir?",
+    options: ["Şaft", "Volan", "Kavrama", "Amortisör"],
+    correctAnswer: "D",
+    imageUrl: "assets/images/deneme1-42.png",
+  ),
+
+// 43. Soru
+  Question(
+    questionText:
+        "Seyir hâlindeki aracın gösterge panelinde aşağıdaki ikaz ışıklarından hangisinin yanıyor olması, trafik kurallarına uymak şartıyla derhal durulması gerektiğini belirtir?",
+    options: [
+      "Fren sistemi hatası",
+      "Motor yağı basıncı düşük",
+      "Akü şarj sistemi hatası",
+      "Lastik basıncı düşük"
+    ],
+    correctAnswer: "A",
+    imageUrl: "assets/images/deneme1-43.png",
+  ),
+
+// 44. Soru
+  Question(
+    questionText:
+        "Araçta yakıt tasarrufu sağlamak için aşağıdakilerden hangisi yapılır?",
+    options: [
+      "Motor daima yüksek devirde çalıştırılır.",
+      "Lastiklerin hava basıncının normal değerde olmasına dikkat edilir.",
+      "Trafiğin yoğun olduğu yollar seçilir.",
+      "Aracın yükü ve ağırlığı artırılır."
+    ],
+    correctAnswer: "B",
+    imageUrl: null,
+  ),
+
+// 45. Soru
+  Question(
+    questionText:
+        "Sürücü, trafik içinde yapacağı bir kural ihlalinde kendisinin ya da sevdiklerinin canını tehlikeye attığının farkında olmalıdır. Bu farkındalığı kazanmak için yapılması gereken aşağıdakilerden hangisidir?",
+    options: [
+      "Kızgın ve yarışmacı motivasyon ile araç kullanılması",
+      "Karşılı saygının öncelikle başkalarından beklenmesi",
+      "Kural ihlalinin sonucunda sadece maddi ceza olduğunun düşünülmesi",
+      "Trafikteki her kuralın altında yatan güvenlik gerekçelerinin sorgulanıp öğrenilmesi"
+    ],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 46. Soru
+  Question(
+    questionText:
+        "Denetim ve ceza korkusu olmadan yazılı kurallara uymanın yanı sıra yazılı olmayan, trafik içerisinde karşılıklı anlayış ve empati gerektiren davranışları oluşturma ve bu davranışları alışkanlık haline getirmedir. Bu cümlede tanımı yapılan kavram, aşağıdakilerden hangisidir?",
+    options: ["Mizaç", "Beden dili", "Trafik adabı", "Konuşma üslubu"],
+    correctAnswer: "C",
+    imageUrl: null,
+  ),
+
+// 47. Soru
+  Question(
+    questionText:
+        "Trafik ortamında bazen hak kendinizden yana iken bile bu hakkınızı diğer sürücüye vermek size bir şey kaybettirmeyeceği gibi daha huzurlu bir trafik ortamı sağlamaya katkıda bulunacaktır. Yukarıdaki açıklama trafikteki temel değerlerden hangisine aittir?",
+    options: [
+      "Sabırsızlık",
+      "Saldırganlık",
+      "Tahammülsüzlük",
+      "Feragat ve fedakârlık"
+    ],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 48. Soru
+  Question(
+    questionText:
+        "Aşağıdakilerden hangisi, trafik denetim görevlileriyle iletişim kuran sürücünün trafik adabı açısından özen göstermesi gereken davranışlardandır?",
+    options: [
+      "Empati kurmaktan kaçınmak",
+      "Dinlemeyi etkin şekilde yapmamak",
+      "Karşısındaki kişiye saygı duyarak varlığını kabul etmek",
+      "Karşısındaki kişinin ne demek istediğini gözden geçirmek yerine akıl okumak"
+    ],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 49. Soru
+  Question(
+    questionText: "Aşağıdakilerden hangisi öfke yönetiminin amaçlarındandır?",
+    options: [
+      "Öfkeyi bastırmak ya da yok etmek",
+      "Kızgınlığa yol açan olayları değiştirmek",
+      "İnsanlar ya da olaylar karşısında gösterilen içsel ve dışsal tepkilerde kontrolsüz davranılmasını sağlamak",
+      "Kızgınlığın ya da öfkenin yol açtığı duygusal ve fizyolojik tepkileri azaltmak"
+    ],
+    correctAnswer: "C",
+    imageUrl: null,
+  ),
+
+// 50. Soru
+  Question(
+    questionText:
+        "I. Geçiş üstünlüğüne sahip araçlara yol vermek II. Aşırı hız yaparak diğer sürücülerin dikkatlerini dağıtmak III. Engeli olmadığı hâlde engelli kişiler için ayrılmış yerlere park etmek Yukarıdakilerden hangileri trafikte bireye yapılan hak ihlallerindendir?",
+    options: ["Yalnız I", "I ve II", "II ve III", "I, II ve III"],
+    correctAnswer: "C",
+    imageUrl: null,
   ),
 ];
 
