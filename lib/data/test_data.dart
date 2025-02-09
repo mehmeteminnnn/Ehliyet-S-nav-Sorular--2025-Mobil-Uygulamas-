@@ -71,7 +71,7 @@ final List<Question> test1Questions = [
       'Heimlich manevrası',
       'Sürükleme yöntemi'
     ],
-    correctAnswer: 'B',
+    correctAnswer: 'D',
   ),
   Question(
     questionText:
@@ -99,7 +99,7 @@ final List<Question> test1Questions = [
       'Kazazedeyi hareket ettirmeden müdahale yapması',
       'Kendisinden önce kazazedenin emniyetini sağlaması'
     ],
-    correctAnswer: 'A',
+    correctAnswer: 'D',
   ),
   Question(
     questionText:
@@ -133,7 +133,7 @@ final List<Question> test1Questions = [
     questionText:
         'Bir aracın güvenle taşıyabileceği en çok yük ağırlığına veya yolcu ve hizmetli sayısına ne denir?',
     options: ['Gabari', 'Taşıma sınırı', 'Dingil ağırlığı', 'Azami ağırlık'],
-    correctAnswer: 'D',
+    correctAnswer: 'B',
   ),
   Question(
     questionText:
@@ -151,94 +151,94 @@ final List<Question> test1Questions = [
 
   // 17. Soru
   Question(
-    questionText:
-        "Şekildeki trafik işareti aşağıdakilerden hangisini bildirir?",
+    questionText: "",
     options: [
       "Dönel kavşağa yaklaşıldığını",
       "Kontrolsüz kavşağa yaklaşıldığını",
       "Demir yolu geçidine yaklaşıldığını",
       "Ana yol - tali yol kavşağına yaklaşıldığını"
     ],
-    correctAnswer: "Dönel kavşağa yaklaşıldığını",
+    correctAnswer: "D",
     imageUrl: "assets/images/deneme1-17.png",
   ),
 
   // 18. Soru
   Question(
-    questionText:
-        "Şekildeki trafik işaretini gören sürücünün aşağıdakilerden hangisini yapması yanlıştır?",
+    questionText: "",
     options: [
       "Yolu kontrol etmesi",
       "Öndeki aracı geçmesi",
       "Aracının hızını azaltması",
       "Geçiş hakkını yayalara vermesi"
     ],
-    correctAnswer: "Öndeki aracı geçmesi",
+    correctAnswer: "B",
     imageUrl: "assets/images/deneme1-18.png",
   ),
 
   // 19. Soru
   Question(
-    questionText: "Şekildeki trafik işareti neyi bildirir?",
+    questionText: "",
     options: ["A", "B", "C", "D"],
-    correctAnswer: "C",
+    correctAnswer: "A",
     imageUrl: "assets/images/deneme1-19.png",
   ),
 
   // 20. Soru
   Question(
-    questionText: "Şekildeki trafik işareti neyi ifade eder?",
+    questionText: "",
     options: ["A", "B", "C", "D"],
-    correctAnswer: "C",
+    correctAnswer: "A",
     imageUrl: "assets/images/deneme1-20.png",
   ),
 
-  // 21. Soru (Görsel içermiyor)
+//21 gercek
   Question(
     questionText:
-        "Kanlarındaki alkol miktarı kaç promilin üzerinde olan hususi otomobil sürücülerinin kara yolunda araç sürmesi yasaktır?",
-    options: ["0,20", "0,30", "0,40", "0,50"],
-    correctAnswer: "0,50",
+        "Trafik kuruluşunca, uyuşturucu veya uyarıcı madde kullandığı tespit edilen sürücüye aşağıdaki işlemlerden hangisi uygulanır?",
+    options: [
+      "Sadece para cezası verilir.",
+      "Sürücü belgesi 6 ay süreyle geri alınır.",
+      "Sürücü belgesi 5 yıl süreyle geçici olarak geri alınır.",
+      "En sağ şeritten gitmek koşuluyla araç sürmesine izin verilir."
+    ],
+    correctAnswer: "C",
     imageUrl: null, // Görsel içermiyor
   ),
 
   // 22. Soru (Görsel içermiyor)
   Question(
     questionText:
-        "Aksine bir işaret yoksa şekildeki aracın yerleşim yeri içindeki azami hızı saatte kaç kilometredir?",
-    options: ["50", "70", "80", "90"],
-    correctAnswer: "50",
+        "Kanlarındaki alkol miktarı kaç promilin üzerinde olan hususi otomobil sürücülerinin kara yolunda araç sürmesi yasaktır?",
+    options: ["0,20", "0,30", "0,40", "0,50"],
+    correctAnswer: "D",
     imageUrl: null, // Görsel içermiyor
   ),
 
   // 23. Soru
   Question(
-    questionText:
-        "Aşağıdaki trafik işaretlerinden hangisi, bütün yasaklama ve kısıtlamaların sona erdiğini bildirir?",
-    options: ["İşaret A", "İşaret B", "İşaret C", "İşaret D"],
-    correctAnswer: "İşaret D",
+    questionText: "",
+    options: ["50", "70", "80", "90"],
+    correctAnswer: "A",
     imageUrl: "assets/images/deneme1-23.png",
   ),
 
   // 24. Soru
   Question(
-    questionText:
-        "Taşıt yolu üzerine çizilen şekildeki yazı ve sembollerden hangileri, sürücülere araçlarını uygun mesafede mutlaka durdurmaları gerektiğini bildirir?",
+    questionText: "",
     options: ["Yalnız I", "I ve II", "II ve III", "I, II ve III"],
-    correctAnswer: "I ve II",
+    correctAnswer: "A",
     imageUrl: "assets/images/deneme1-24.png",
   ),
-
-  // 25. Soru (Görsel içermiyor)
+// 25. Soru (Görsel içermiyor)
   Question(
     questionText:
         "Aksine bir durum yoksa, otoyollarda yolcu sepetsiz iki tekerlekli motosikletlerin azami hız sınırı saatte kaç kilometredir?",
     options: ["70", "80", "90", "100"],
-    correctAnswer: "80",
+    correctAnswer: "D",
     imageUrl: null, // Görsel içermiyor
   ),
 
-  // 26. Soru
+// 26. Soru
   Question(
     questionText:
         "Trafik uygun olsa bile şekildeki aracın hangi yöndeki hareketi kesinlikle yasaktır?",
@@ -248,17 +248,16 @@ final List<Question> test1Questions = [
       "U dönüşü yapması",
       "Aynı yönde ilerlemesi"
     ],
-    correctAnswer: "U dönüşü yapması",
+    correctAnswer: "C",
     imageUrl: "assets/images/deneme1-26.png",
   ),
 
   // 27. Soru
   Question(
-    questionText:
-        "Aksine bir işaret yoksa, şekildeki aracın yerleşim yeri içindeki azami hızı saatte kaç kilometredir?",
+    questionText: "",
     options: ["30", "50", "70", "80"],
-    correctAnswer: "50",
-    imageUrl: "assets/images/deneme1-27.png",
+    correctAnswer: "B",
+    imageUrl: null, // Görsel içermiyor
   ),
 
   // 28. Soru (Görsel içermiyor)
@@ -271,7 +270,7 @@ final List<Question> test1Questions = [
       "Orta adaya bitişik şeritten dönüşe geçilmesi",
       "Sağa ve sola dönüş kurallarına uyulması"
     ],
-    correctAnswer: "Ada etrafında dönerken gereksiz yere şerit değiştirilmesi",
+    correctAnswer: "A",
     imageUrl: null, // Görsel içermiyor
   ),
 
@@ -285,8 +284,8 @@ final List<Question> test1Questions = [
       "Kurallara uygun olarak öndeki araç geçilebilir.",
       "Taşıt yolu, bölünmüş yol durumuna gelmiştir."
     ],
-    correctAnswer: "Kurallara uygun olarak öndeki araç geçilebilir.",
-    imageUrl: null, // Görsel içermiyor
+    correctAnswer: "C",
+    imageUrl: "assets/images/deneme1-29.png",
   ),
 
   // 30. Soru
@@ -299,8 +298,128 @@ final List<Question> test1Questions = [
       "Kavşağa yaklaşırken hızını düşürmesi",
       "Yayaları ikaz ederek durdurup, seyrini sürdürmesi"
     ],
-    correctAnswer: "Yayaları ikaz ederek durdurup, seyrini sürdürmesi",
+    correctAnswer: "D",
     imageUrl: "assets/images/deneme1-30.png",
+  ),
+
+  // 31. Soru
+  Question(
+    questionText:
+        "Aksine bir durum yoksa motosiklet sürücüsü 60 km/saat hızla seyrederken önündeki araca en fazla kaç metre yaklaşabilir?",
+    options: ["40", "30", "20", "10"],
+    correctAnswer: "B",
+    imageUrl: null,
+  ),
+
+// 32. Soru
+  Question(
+    questionText:
+        "Sürücülerin dönüşlerde aşağıdakilerden hangisini yapması yanlıştır?",
+    options: [
+      "Geçiş hakkı kurallarına uyması",
+      "Dönüş yönüne göre uygun şeride girmesi",
+      "Döneceği yönü önceden işaretle bildirmesi",
+      "Dönmeye başladıktan sonra işaret vermesi"
+    ],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 33. Soru
+  Question(
+    questionText:
+        "Monoküler (tek gözü gören) kişiler, aşağıda verilen sürücü belgesi sınıflarından hangisini almak için başvuru yapabilir?",
+    options: ["B", "C", "D", "E"],
+    correctAnswer: "A",
+    imageUrl: null,
+  ),
+
+// 34. Soru
+  Question(
+    questionText:
+        "Kamunun faydalandığı okul, hastane ve benzerlerinin giriş ve çıkış kapılarına her iki yönden kaç metrelik mesafe içinde park edilmesi yasaktır?",
+    options: ["5", "10", "15", "20"],
+    correctAnswer: "A",
+    imageUrl: null,
+  ),
+
+// 35. Soru
+  Question(
+    questionText:
+        "Aşağıdakilerin hangisinde dönüş ışıklarının kullanılması yasaktır?",
+    options: [
+      "Şerit değiştirmelerde",
+      "Bir aracın geçilmesi esnasında",
+      "Kavşaklarda sağa ve sola dönüşlerde",
+      "Sürücülere 'geç' mesajının verilmesinde"
+    ],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 36. Soru
+  Question(
+    questionText:
+        "Motor hareketinin vites kutusuna iletilmesini sağlayan sistem aşağıdakilerden hangisidir?",
+    options: ["Marş", "Şarj", "Ateşleme", "Kavrama"],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 37. Soru
+  Question(
+    questionText:
+        "Şekildeki araç güç aktarma organlarının adları hangi seçenekte doğru olarak verilmiştir?",
+    options: [
+      "I. Şaft – II. Diferansiyel – III. Aks",
+      "I. Şaft – II. Aks – III. Diferansiyel",
+      "I. Aks – II. Diferansiyel – III. Şaft",
+      "I. Diferansiyel – II. Aks – III. Şaft"
+    ],
+    correctAnswer: "A",
+    imageUrl: "assets/images/deneme1-37.png",
+  ),
+
+// 38. Soru
+  Question(
+    questionText:
+        "Yağ eksilten bir araçta periyodik yağ değişimi yapmak yerine sürekli eksik yağı tamamlayarak aracı kullanmaya devam etmek, aşağıdakilerden hangisine neden olur?",
+    options: [
+      "Yağ ömrünün artmasına",
+      "Yakıt tüketiminin azalmasına",
+      "Bakım masrafının azalmasına",
+      "Yağın çamurlaşarak motora zarar vermesine"
+    ],
+    correctAnswer: "D",
+    imageUrl: null,
+  ),
+
+// 39. Soru
+  Question(
+    questionText:
+        "Aracın gösterge panelinde şekildeki uyarı lambasının yanıyor olması neyi bildirir?",
+    options: [
+      "Lastik basıncının düşük olduğunu",
+      "El freninin çekili olduğunu",
+      "Sis lambalarının yandığını",
+      "Fren balatalarının bittiğini"
+    ],
+    correctAnswer: "D",
+    imageUrl: "assets/images/deneme1-39.png",
+  ),
+
+// 40. Soru
+  Question(
+    questionText:
+        "Motor çalışır durumda iken aracın gösterge panelinde şekildeki ikaz ışığının yanıyor olmasının sebebi, aşağıdakilerden hangisi olabilir?",
+    options: [
+      "Yağ seviyesinin azalması",
+      "Depodaki yakıtın azalması",
+      "Fren hidroliğinin eksilmesi",
+      "Radyatörde antifrizin olmaması"
+    ],
+    correctAnswer: "A",
+    imageUrl: "assets/images/deneme1-40.png",
   ),
 ];
 

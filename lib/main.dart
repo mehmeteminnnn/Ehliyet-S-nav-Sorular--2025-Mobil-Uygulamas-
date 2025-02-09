@@ -304,7 +304,14 @@ class _TestScreenState extends State<TestScreen> {
     final question = widget.test.questions[_currentQuestionIndex];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Test ${widget.test.testNumber}'),
+        centerTitle: true,
+        title: Text(
+          'Test ${widget.test.testNumber}',
+          style: TextStyle(
+            fontSize: 19, // Başlık font boyutu
+            fontWeight: FontWeight.bold, // Kalın font
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -341,7 +348,13 @@ class _TestScreenState extends State<TestScreen> {
               const SizedBox(height: 16),
               Text(
                 question.questionText,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: TextStyle(
+                  fontSize: 20, // Başlık font boyutu
+                  fontWeight: FontWeight.bold, // Kalın font
+                  color: Colors.black, // Başlık rengi
+                  height: 1.4, // Satır yüksekliği, metni daha okunabilir yapar
+                ),
+                textAlign: TextAlign.center, // Başlığı ortala
               ),
               const SizedBox(height: 24),
               ...List.generate(
