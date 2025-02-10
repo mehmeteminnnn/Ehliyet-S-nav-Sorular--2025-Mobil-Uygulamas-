@@ -13,7 +13,7 @@ class AdService {
   InterstitialAd? _interstitialAd;
   RewardedAd? _rewardedAd;
   bool _isInterstitialAdReady = false;
-  int _remainingAdsToUnlock = 2;
+  int _remainingAdsToUnlock = 1;
   Function? _onAdDismissed;
 
   int get remainingAdsToUnlock => _remainingAdsToUnlock;
@@ -40,7 +40,7 @@ class AdService {
       onAdDismissedFullScreenContent: (ad) {
         _remainingAdsToUnlock--;
         if (_remainingAdsToUnlock <= 0) {
-          _remainingAdsToUnlock = 2; // Reset for next level
+          _remainingAdsToUnlock = 1; // Reset for next level
         }
         _isInterstitialAdReady = false;
         loadInterstitialAd();
@@ -101,6 +101,7 @@ class AdService {
         loadRewardedAd();
       },
       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        debugPrint('Ödüllü reklam gösterilemedi: $error');
         ad.dispose();
         loadRewardedAd();
       },
@@ -110,25 +111,40 @@ class AdService {
   void showRewardedAd(Function onRewarded) {
     if (_rewardedAd == null) {
       debugPrint('Ödüllü reklam henüz hazır değil.');
+      loadRewardedAd();
       return;
     }
 
     _rewardedAd!.show(
       onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-        _remainingAdsToUnlock--;
+        _remainingAdsToUnlock = 0;
         onRewarded();
-        if (_remainingAdsToUnlock <= 0) {
-          _remainingAdsToUnlock = 2; // Reset for next level
-        }
+        loadRewardedAd();
       },
     );
+  }
+
+  void showTestAd(int currentQuestionIndex, int totalQuestions) {
+    if (currentQuestionIndex == 0) {
+      showInterstitialAd();
+      return;
+    }
+
+    if (currentQuestionIndex == (totalQuestions ~/ 2)) {
+      showInterstitialAd();
+      return;
+    }
+
+    if (currentQuestionIndex == totalQuestions - 1) {
+      showInterstitialAd();
+    }
   }
 
   @override
   void dispose() {
     _interstitialAd?.dispose();
     _rewardedAd?.dispose();
-    _remainingAdsToUnlock = 2;
+    _remainingAdsToUnlock = 1;
     _onAdDismissed = null;
   }
 }

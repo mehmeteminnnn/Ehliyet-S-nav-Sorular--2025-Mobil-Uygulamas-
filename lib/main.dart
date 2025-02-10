@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'models/question.dart';
-import 'data/test_data.dart';
+import 'data/test1.dart';
 import 'services/ad_service.dart';
 import 'services/preferences_service.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/splash_screen.dart';
+import 'models/test.dart';
+import 'data/test2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +52,11 @@ class TestListScreen extends StatefulWidget {
 }
 
 class _TestListScreenState extends State<TestListScreen> {
+  final List<Test> tests = [
+    Test1Data.getTest(),
+    Test2Data.getTest(),
+  ];
+
   final AdService _adService = AdService();
 
   @override
@@ -66,9 +73,9 @@ class _TestListScreenState extends State<TestListScreen> {
   }
 
   void _handleLevelUnlock(int testIndex) {
-    final test = allTests[testIndex];
+    final test = tests[testIndex];
     if (testIndex > 0) {
-      final previousTest = allTests[testIndex - 1];
+      final previousTest = tests[testIndex - 1];
       final bool canUnlockWithPreviousTest =
           previousTest.isCompleted && (previousTest.score ?? 0) >= 35;
 
@@ -78,22 +85,20 @@ class _TestListScreenState extends State<TestListScreen> {
           title: const Text('Seviye Kilitli'),
           content: Text(canUnlockWithPreviousTest
               ? 'Tebrikler! Önceki testi başarıyla tamamladınız. Bu seviye açıldı.'
-              : 'Bu seviyeyi açmak için önceki testten en az 35 doğru yapmanız veya ${_adService.remainingAdsToUnlock} ödüllü reklam izlemeniz gerekiyor.'),
+              : 'Bu seviyeyi açmak için önceki testten en az 35 doğru yapmanız veya reklam izlemeniz gerekiyor.'),
           actions: [
             if (!canUnlockWithPreviousTest)
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  _adService.loadRewardedAd();
                   _adService.showRewardedAd(() {
                     setState(() {
-                      if (_adService.remainingAdsToUnlock <= 0) {
-                        test.isLocked = false;
-                      }
+                      test.isLocked = false;
                     });
                   });
                 },
-                child: Text(
-                    'Reklam İzle (${_adService.remainingAdsToUnlock} kaldı)'),
+                child: const Text('Reklam İzle'),
               ),
             TextButton(
               onPressed: () {
@@ -169,9 +174,9 @@ class _TestListScreenState extends State<TestListScreen> {
                   ),
                 ),
                 child: ListView.builder(
-                  itemCount: allTests.length,
+                  itemCount: tests.length,
                   itemBuilder: (context, index) {
-                    final test = allTests[index];
+                    final test = tests[index];
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 12),
@@ -247,8 +252,10 @@ class _TestListScreenState extends State<TestListScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        TestScreen(test: test),
+                                    builder: (context) => TestScreen(
+                                      test: test,
+                                      tests: tests,
+                                    ),
                                   ),
                                 );
                               },
@@ -267,8 +274,13 @@ class _TestListScreenState extends State<TestListScreen> {
 
 class TestScreen extends StatefulWidget {
   final Test test;
+  final List<Test> tests;
 
-  const TestScreen({super.key, required this.test});
+  const TestScreen({
+    super.key,
+    required this.test,
+    required this.tests,
+  });
 
   @override
   State<TestScreen> createState() => _TestScreenState();
@@ -774,8 +786,9 @@ class _TestScreenState extends State<TestScreen> {
                         ElevatedButton(
                           onPressed: () {
                             if (hasPassedTest) {
-                              if (widget.test.testNumber < allTests.length) {
-                                allTests[widget.test.testNumber].isLocked =
+                              if (widget.test.testNumber <
+                                  widget.tests.length) {
+                                widget.tests[widget.test.testNumber].isLocked =
                                     false;
                               }
                               widget.test.isCompleted = true;
@@ -806,11 +819,9 @@ class _TestScreenState extends State<TestScreen> {
       if (_currentQuestionIndex < widget.test.questions.length - 1) {
         _currentQuestionIndex++;
 
-        // Her 10 soruda bir reklam göster
-        if (_currentQuestionIndex % 10 == 0 &&
-            _currentQuestionIndex < widget.test.questions.length - 1) {
-          _adService.showInterstitialAd();
-        }
+        // Reklam gösterimi için kontrol
+        _adService.showTestAd(
+            _currentQuestionIndex, widget.test.questions.length);
       } else {
         _showResults = true;
       }
