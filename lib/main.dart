@@ -9,6 +9,7 @@ import 'screens/welcome_screen.dart';
 import 'screens/splash_screen.dart';
 import 'models/test.dart';
 import 'data/test2.dart';
+import 'data/test3.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,7 @@ class _TestListScreenState extends State<TestListScreen> {
   final List<Test> tests = [
     Test1Data.getTest(),
     Test2Data.getTest(),
+    Test3Data.getTest(),
   ];
 
   final AdService _adService = AdService();
