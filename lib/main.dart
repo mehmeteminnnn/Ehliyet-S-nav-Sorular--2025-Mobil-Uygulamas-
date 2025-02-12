@@ -1,3 +1,4 @@
+import 'package:ehliyet/data/test4.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
@@ -10,6 +11,7 @@ import 'screens/splash_screen.dart';
 import 'models/test.dart';
 import 'data/test2.dart';
 import 'data/test3.dart';
+import 'data/test4.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +59,7 @@ class _TestListScreenState extends State<TestListScreen> {
     Test1Data.getTest(),
     Test2Data.getTest(),
     Test3Data.getTest(),
+    Test4Data.getTest(),
   ];
 
   final AdService _adService = AdService();
