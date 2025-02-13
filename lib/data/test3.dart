@@ -5,7 +5,7 @@ class Test3Data {
   static Test getTest() {
     return Test(
       testNumber: 3,
-      isLocked: true,
+      isLocked: false,
       questions: [
         // Soru 1
         Question(

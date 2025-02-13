@@ -1,4 +1,7 @@
 import 'package:ehliyet/data/test4.dart';
+import 'package:ehliyet/data/test7.dart';
+import 'package:ehliyet/data/test8.dart';
+import 'package:ehliyet/data/test9.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
@@ -12,6 +15,12 @@ import 'models/test.dart';
 import 'data/test2.dart';
 import 'data/test3.dart';
 import 'data/test4.dart';
+import 'data/test5.dart';
+import 'data/test6.dart';
+import 'data/test7.dart';
+import 'data/test8.dart';
+import 'data/test9.dart';
+import 'data/test10.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +69,12 @@ class _TestListScreenState extends State<TestListScreen> {
     Test2Data.getTest(),
     Test3Data.getTest(),
     Test4Data.getTest(),
+    Test5Data.getTest(),
+    Test6Data.getTest(),
+    Test7Data.getTest(),
+    Test8Data.getTest(),
+    Test9Data.getTest(),
+    Test10Data.getTest()
   ];
 
   final AdService _adService = AdService();
@@ -144,7 +159,7 @@ class _TestListScreenState extends State<TestListScreen> {
                         ),
                       ),
                       Text(
-                        '20 test mevcut',
+                        '10 test mevcut',
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: 16,
