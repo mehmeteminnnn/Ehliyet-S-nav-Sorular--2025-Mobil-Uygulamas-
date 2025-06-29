@@ -1,11 +1,12 @@
-# 🚗 Ehliyet Sınavı 2025
-![Screenshot_1738094906](https://github.com/user-attachments/assets/3e8ccee9-df6b-4ff4-9255-75c6463f5977)
-![Screenshot_1738094903](https://github.com/user-attachments/assets/412ad580-32be-44f7-9b4d-0e31272e33b6)
+<h1>🚗 Ehliyet Sınavı 2025</h1>
 
-![Screenshot_1738094909](https://github.com/user-attachments/assets/54ff5c61-04a2-45ae-8e2f-7f09904957a2)
-
-![Screenshot_1738094906](https://github.com/user-attachments/assets/4bd34388-bc2a-4cc9-ab5f-f9e5f99f15fc)
-![Screenshot_1738094946](https://github.com/user-attachments/assets/0ff2afe8-9c38-4995-af23-b2f8fda5ca5e)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3e8ccee9-df6b-4ff4-9255-75c6463f5977" width="120"/>
+  <img src="https://github.com/user-attachments/assets/412ad580-32be-44f7-9b4d-0e31272e33b6" width="120"/>
+  <img src="https://github.com/user-attachments/assets/54ff5c61-04a2-45ae-8e2f-7f09904957a2" width="120"/>
+  <img src="https://github.com/user-attachments/assets/4bd34388-bc2a-4cc9-ab5f-f9e5f99f15fc" width="120"/>
+  <img src="https://github.com/user-attachments/assets/0ff2afe8-9c38-4995-af23-b2f8fda5ca5e" width="120"/>
+</p>
 
 
 **Ehliyet Sınavı 2025**, sürücü adaylarının sınav başarısını artırmayı hedefleyen, Android cihazlar için geliştirilmiş modern ve kullanıcı dostu bir mobil uygulamadır.
